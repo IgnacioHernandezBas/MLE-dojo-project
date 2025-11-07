@@ -15,7 +15,7 @@ This project provides a clean separation between the MLE-Dojo framework (treated
 
 ```
 ~/MLE-dojo-project/
-├── mle-dojo/                    # The cloned MLE-Dojo repo (dependency)
+├── MLE-Dojo/                    # The cloned MLE-Dojo repo (dependency)
 │   └── README.md               # Setup instructions
 ├── agent/                       # YOUR agent code
 │   ├── core/                   # Framework-agnostic core
@@ -59,15 +59,15 @@ This project provides a clean separation between the MLE-Dojo framework (treated
 
 ```bash
 # Clone MLE-Dojo into the dependency directory
-cd mle-dojo
+cd MLE-Dojo
 git clone https://github.com/MLEDojo/mle-dojo.git .
 cd ..
 
 # Or if you prefer to clone from parent directory
-git clone https://github.com/MLEDojo/mle-dojo.git mle-dojo/
+git clone https://github.com/MLEDojo/mle-dojo.git MLE-Dojo/
 
 # Follow MLE-Dojo's setup instructions
-cd mle-dojo
+cd MLE-Dojo
 pip install -e .
 cd ..
 ```
