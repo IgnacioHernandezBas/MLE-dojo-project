@@ -18,7 +18,7 @@ bash scripts/prepare-competition.sh house-prices-advanced-regression-techniques
 **Prerequisites:**
 - Kaggle API credentials in `~/.kaggle/kaggle.json`
 - Accepted competition terms on Kaggle website
-- MLE-Dojo repository cloned in `mle-dojo/`
+- MLE-Dojo repository cloned in `MLE-Dojo/`
 
 ### set_up_env.sh
 Sets up environment variables for Singularity/Apptainer containers.
