@@ -1,0 +1,119 @@
+# Evaluation Configuration
+# Configuration for agent evaluation and benchmarking
+
+evaluation:
+  # Evaluation settings
+  num_episodes: 10
+  max_steps_per_episode: 100
+  timeout_per_episode: 3600  # 1 hour in seconds
+
+  # Benchmarks to evaluate on
+  benchmarks:
+    - name: "default"
+      difficulty: "medium"
+      tasks: null  # null means all tasks in benchmark
+
+    # Additional benchmark configurations
+    # - name: "easy"
+    #   difficulty: "easy"
+    #   tasks: null
+    #
+    # - name: "hard"
+    #   difficulty: "hard"
+    #   tasks: null
+
+# Agent configuration for evaluation
+agent:
+  # Model settings
+  model_name: "Qwen/Qwen2.5-Coder-7B-Instruct"
+  device: "cuda"
+
+  # Generation parameters (can be different from training)
+  max_new_tokens: 512
+  temperature: 0.3  # Lower temperature for evaluation
+  top_p: 0.9
+  do_sample: true
+
+  # Context management
+  max_history_turns: 5
+
+# Metrics to compute
+metrics:
+  # Success metrics
+  - success_rate
+  - task_completion_rate
+
+  # Reward metrics
+  - avg_reward
+  - total_reward
+  - reward_std
+
+  # Efficiency metrics
+  - avg_steps
+  - avg_time
+
+  # Code quality metrics (if applicable)
+  - code_execution_rate
+  - test_pass_rate
+
+# Output configuration
+output:
+  # Save detailed results
+  save_episode_details: true
+  save_trajectories: true
+
+  # Output directory
+  results_dir: "experiments/evaluations"
+
+  # Generate report
+  generate_report: true
+  report_format: "json"  # Options: "json", "html", "markdown"
+
+# Visualization
+visualization:
+  # Generate plots
+  create_plots: true
+  plot_types:
+    - reward_distribution
+    - success_rate_by_task
+    - steps_histogram
+
+  # Plot output
+  plot_dir: "experiments/evaluations/plots"
+  plot_format: "png"  # Options: "png", "pdf", "svg"
+
+# Comparison settings (for comparing multiple models)
+comparison:
+  # Enable comparison mode
+  enabled: false
+
+  # Models to compare
+  models: []
+    # - name: "baseline"
+    #   path: "experiments/checkpoints/baseline"
+    # - name: "rl-trained"
+    #   path: "experiments/checkpoints/rl_run_001"
+
+  # Comparison metrics
+  comparison_metrics:
+    - success_rate
+    - avg_reward
+    - avg_steps
+
+# Logging
+logging:
+  # Verbosity
+  verbose: true
+  log_level: "INFO"  # Options: "DEBUG", "INFO", "WARNING", "ERROR"
+
+  # Log file
+  save_logs: true
+  log_file: "experiments/evaluations/eval.log"
+
+# Reproducibility
+reproducibility:
+  # Random seed
+  seed: 42
+
+  # Deterministic mode
+  deterministic: true

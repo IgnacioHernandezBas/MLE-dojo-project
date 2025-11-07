@@ -1,0 +1,128 @@
+# Training Configuration
+# Configuration for RL training and fine-tuning
+
+training:
+  # Base model
+  base_model: "Qwen/Qwen2.5-Coder-7B-Instruct"
+
+  # Training mode
+  mode: "rl"  # Options: "supervised", "rl", "mixed"
+
+  # RL algorithm
+  algorithm: "ppo"  # Options: "ppo", "dpo", "grpo"
+
+  # Training hyperparameters
+  num_iterations: 100
+  episodes_per_iteration: 10
+  batch_size: 8
+  learning_rate: 1.0e-5
+  warmup_steps: 100
+
+  # PPO-specific parameters
+  ppo:
+    gamma: 0.99
+    gae_lambda: 0.95
+    clip_epsilon: 0.2
+    value_coef: 0.5
+    entropy_coef: 0.01
+    max_grad_norm: 1.0
+    ppo_epochs: 4
+    mini_batch_size: 4
+
+  # Reward shaping
+  rewards:
+    # Task completion rewards
+    task_completion: 10.0
+    partial_progress: 1.0
+    no_progress: -0.1
+
+    # Code quality rewards
+    code_runs: 0.5
+    tests_pass: 2.0
+    efficient_solution: 1.0
+
+    # Penalties
+    syntax_error: -0.5
+    timeout: -1.0
+    invalid_action: -0.5
+
+# Data configuration
+data:
+  # Trajectory data
+  trajectories_dir: "experiments/trajectories"
+
+  # Data preprocessing
+  max_trajectory_length: 100
+  filter_failed_episodes: false
+
+  # Data augmentation
+  use_augmentation: false
+
+# Optimization
+optimization:
+  # Optimizer
+  optimizer: "adamw"
+  weight_decay: 0.01
+  adam_beta1: 0.9
+  adam_beta2: 0.999
+  adam_epsilon: 1.0e-8
+
+  # Learning rate schedule
+  lr_scheduler: "cosine"
+  lr_warmup_ratio: 0.1
+
+  # Gradient settings
+  gradient_accumulation_steps: 1
+  max_grad_norm: 1.0
+
+# Checkpointing
+checkpointing:
+  # Save frequency
+  save_every_n_iterations: 10
+  save_total_limit: 5
+
+  # Checkpoint directory
+  checkpoint_dir: "experiments/checkpoints"
+
+  # Resume from checkpoint
+  resume_from: null
+
+# Logging
+logging:
+  # Logging frequency
+  log_every_n_steps: 10
+  eval_every_n_iterations: 5
+
+  # Logging backends
+  use_tensorboard: true
+  use_wandb: false
+
+  # Logging directory
+  log_dir: "experiments/logs"
+
+  # Weights & Biases config (if use_wandb: true)
+  wandb:
+    project: "mle-dojo"
+    entity: null
+    name: null
+
+# Hardware
+hardware:
+  # GPU settings
+  num_gpus: 1
+  mixed_precision: "fp16"  # Options: "no", "fp16", "bf16"
+
+  # Distributed training
+  distributed: false
+  distributed_backend: "nccl"
+
+# Evaluation during training
+eval:
+  # Evaluation settings
+  num_eval_episodes: 5
+  eval_benchmarks: ["default"]
+
+  # Early stopping
+  use_early_stopping: false
+  early_stopping_patience: 10
+  early_stopping_metric: "avg_reward"

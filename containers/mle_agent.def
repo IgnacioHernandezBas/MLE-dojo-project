@@ -1,0 +1,74 @@
+Bootstrap: docker
+From: nvidia/cuda:12.1.0-cudnn8-devel-ubuntu22.04
+
+%labels
+    Author YourName
+    Version v0.1.0
+    Description MLE-Dojo Agent Container
+
+%help
+    This container provides the environment for running MLE-Dojo agents
+    with GPU support.
+
+    Usage:
+        apptainer run --nv mle_agent.sif [command]
+
+%environment
+    export PYTHONPATH=/workspace:$PYTHONPATH
+    export CUDA_HOME=/usr/local/cuda
+    export PATH=/usr/local/cuda/bin:$PATH
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+
+%post
+    # Update and install system dependencies
+    apt-get update && apt-get install -y \
+        python3.10 \
+        python3-pip \
+        git \
+        wget \
+        vim \
+        htop \
+        tmux \
+        build-essential \
+        && rm -rf /var/lib/apt/lists/*
+
+    # Upgrade pip
+    python3 -m pip install --upgrade pip setuptools wheel
+
+    # Install Python dependencies
+    pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+    pip3 install transformers>=4.35.0
+    pip3 install numpy pandas pyyaml
+    pip3 install tqdm wandb tensorboard
+    pip3 install pytest black flake8
+
+    # Create workspace directory
+    mkdir -p /workspace
+
+%runscript
+    #!/bin/bash
+    echo "MLE-Dojo Agent Container"
+    echo "========================"
+    echo "CUDA Version: $(nvcc --version | grep release)"
+    echo "Python Version: $(python3 --version)"
+    echo "PyTorch Version: $(python3 -c 'import torch; print(torch.__version__)')"
+    echo ""
+
+    if [ $# -eq 0 ]; then
+        echo "No command provided. Starting interactive shell..."
+        exec /bin/bash
+    else
+        exec "$@"
+    fi
+
+%test
+    # Test Python installation
+    python3 --version
+    pip3 --version
+
+    # Test CUDA availability
+    python3 -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}')"
+    python3 -c "import torch; print(f'CUDA devices: {torch.cuda.device_count()}')"
+
+    # Test package imports
+    python3 -c "import transformers; print(f'Transformers version: {transformers.__version__}')"
