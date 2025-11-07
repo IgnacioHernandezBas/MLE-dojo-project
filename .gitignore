@@ -1,7 +1,24 @@
+# MLE-Dojo dependency (cloned repo, not tracked)
+mle-dojo/*
+!mle-dojo/README.md
+
 # Data files
 data/prepared/
 *.sif
 *.tar
+
+# Experiments (track configs but not outputs)
+experiments/*/logs/
+experiments/*/checkpoints/
+experiments/*/trajectories/
+experiments/*/evaluations/
+experiments/*/*.json
+experiments/*/*.csv
+experiments/*/*.txt
+experiments/*/tensorboard/
+experiments/*/wandb/
+# But keep directory READMEs
+!experiments/README.md
 
 # Environment and logs
 logs/
@@ -44,13 +61,35 @@ Thumbs.db
 # Jupyter Notebook
 .ipynb_checkpoints
 
-# Model artifacts (if applicable)
+# Model artifacts
 *.h5
 *.pkl
 *.joblib
 *.model
-checkpoints/
+*.pth
+*.pt
+*.bin
+*.safetensors
 
 # Configuration files with secrets
 .env.local
 config.local.*
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Container builds
+containers/*.sif
+containers/*.img
+
+# Temporary files
+*.tmp
+.cache/

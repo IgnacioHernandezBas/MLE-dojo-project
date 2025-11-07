@@ -1,0 +1,132 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mle-dojo-agent"
+version = "0.1.0"
+description = "Custom agent implementation for MLE-Dojo competition"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [
+    {name = "Your Name", email = "your.email@example.com"}
+]
+keywords = ["machine-learning", "reinforcement-learning", "mle-dojo", "agent"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+
+dependencies = [
+    "torch>=2.0.0",
+    "transformers>=4.35.0",
+    "numpy>=1.24.0",
+    "pandas>=2.0.0",
+    "pyyaml>=6.0",
+    "tqdm>=4.65.0",
+    "wandb>=0.15.0",
+    "tensorboard>=2.13.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "black>=23.0.0",
+    "flake8>=6.0.0",
+    "mypy>=1.5.0",
+    "isort>=5.12.0",
+]
+rl = [
+    # "verl",  # To be added when available
+    # "trl",   # Alternative RL framework
+]
+
+[project.scripts]
+mle-agent-train = "agent.training.train_rl:main"
+mle-agent-eval = "agent.training.evaluate:main"
+mle-agent-generate = "agent.training.generate_trajectories:main"
+
+[project.urls]
+Homepage = "https://github.com/yourusername/MLE-dojo-project"
+Repository = "https://github.com/yourusername/MLE-dojo-project"
+Documentation = "https://github.com/yourusername/MLE-dojo-project/blob/main/README.md"
+Issues = "https://github.com/yourusername/MLE-dojo-project/issues"
+
+[tool.setuptools]
+packages = ["agent", "agent.core", "agent.wrappers", "agent.training", "agent.configs"]
+
+[tool.setuptools.package-data]
+agent = ["configs/*.yaml"]
+
+[tool.black]
+line-length = 88
+target-version = ['py39', 'py310', 'py311']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+  | mle-dojo
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 88
+skip_gitignore = true
+extend_skip_glob = ["mle-dojo/*"]
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+ignore_missing_imports = true
+exclude = [
+    "mle-dojo/",
+    "experiments/",
+    "build/",
+]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q --strict-markers"
+testpaths = [
+    "tests",
+]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+
+[tool.coverage.run]
+source = ["agent"]
+omit = [
+    "*/tests/*",
+    "*/mle-dojo/*",
+    "*/__pycache__/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "@abstractmethod",
+]
