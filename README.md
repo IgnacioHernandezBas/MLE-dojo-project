@@ -126,23 +126,32 @@ Edit these files to customize behavior without changing code.
 
 ## Container Usage
 
-For reproducible environments, especially on HPC systems:
+This project uses the existing **MLE-Dojo framework container** (`mle-dojo.sif`). You don't need to build a separate container - just mount your agent code into the framework container.
 
-### Build Container
+### Prerequisites
 
-```bash
-cd containers
-apptainer build mle_agent.sif mle_agent.def
-```
+Make sure you have the `mle-dojo.sif` container in your `images/` directory. If you don't have it yet, follow the MLE-Dojo setup instructions.
 
 ### Run with Container
 
 ```bash
-# Interactive session
-apptainer shell --nv mle_agent.sif
+# Interactive session with agent code mounted
+apptainer shell --nv \
+  --bind $(pwd)/agent:/workspace/agent \
+  images/mle-dojo.sif
 
 # Run specific command
-apptainer exec --nv mle_agent.sif python agent/training/evaluate.py --help
+apptainer exec --nv \
+  --bind $(pwd)/agent:/workspace/agent \
+  --bind $(pwd)/experiments:/workspace/experiments \
+  images/mle-dojo.sif \
+  python /workspace/agent/training/evaluate.py --help
+
+# Run baseline
+apptainer exec --nv \
+  --bind $(pwd):/workspace \
+  images/mle-dojo.sif \
+  bash /workspace/scripts/run_baseline.sh
 ```
 
 ### SLURM Job
@@ -150,6 +159,8 @@ apptainer exec --nv mle_agent.sif python agent/training/evaluate.py --help
 ```bash
 sbatch scripts/submit_slurm.sh
 ```
+
+**Note:** The SLURM script will automatically use the container if it finds `images/mle-dojo.sif`.
 
 ## Development
 
