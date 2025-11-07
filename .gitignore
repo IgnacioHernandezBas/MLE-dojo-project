@@ -1,6 +1,6 @@
 # MLE-Dojo dependency (cloned repo, not tracked)
-mle-dojo/*
-!mle-dojo/README.md
+MLE-Dojo/*
+!MLE-Dojo/README.md
 
 # Data files
 data/prepared/
