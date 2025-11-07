@@ -1,7 +1,7 @@
 #!/bin/bash
 
 PROJECT_DIR="/fs/nexus-scratch/$USER/MLE-dojo-project"
-SOURCE_DIR="$PROJECT_DIR/mle-dojo-source"
+SOURCE_DIR="$PROJECT_DIR/mle-dojo"
 COMPETITION=${1:-"titanic"}
 
 echo "=========================================="
@@ -16,7 +16,7 @@ if [ ! -d "$SOURCE_DIR" ]; then
     echo "Error: Source directory not found!"
     echo "Please clone first:"
     echo "  cd $PROJECT_DIR"
-    echo "  git clone https://github.com/MLE-Dojo/MLE-Dojo.git mle-dojo-source"
+    echo "  git clone https://github.com/MLE-Dojo/MLE-Dojo.git mle-dojo"
     exit 1
 fi
 
