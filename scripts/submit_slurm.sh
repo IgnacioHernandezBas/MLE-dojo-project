@@ -43,12 +43,13 @@ python --version
 echo ""
 
 # Set up container if available
-CONTAINER="containers/mle_agent.sif"
+CONTAINER="images/mle-dojo.sif"
 if [ -f "$CONTAINER" ]; then
     echo "Using container: $CONTAINER"
-    RUNNER="apptainer exec --nv $CONTAINER"
+    # Mount the entire project directory for easy access
+    RUNNER="apptainer exec --nv --bind $(pwd):/workspace --pwd /workspace $CONTAINER"
 else
-    echo "Running without container"
+    echo "Running without container (using local environment)"
     RUNNER=""
 fi
 

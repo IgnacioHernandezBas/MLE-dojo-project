@@ -105,7 +105,8 @@ Tests the MLE-Dojo environment setup.
 python scripts/test_env.py
 
 # Or with container
-apptainer exec --nv containers/mle_agent.sif python scripts/test_env.py
+apptainer exec --nv --bind $(pwd):/workspace images/mle-dojo.sif \
+  python /workspace/scripts/test_env.py
 ```
 
 ## Workflow Examples
@@ -166,4 +167,4 @@ To customize scripts:
 - **Solution:** Increase `--mem` in SLURM script or reduce batch size in config
 
 **Problem:** Container not found
-- **Solution:** Build container first: `cd containers && apptainer build mle_agent.sif mle_agent.def`
+- **Solution:** Make sure `images/mle-dojo.sif` exists. Follow MLE-Dojo setup instructions to obtain the framework container.

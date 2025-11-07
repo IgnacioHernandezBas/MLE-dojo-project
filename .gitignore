@@ -7,6 +7,9 @@ data/prepared/
 *.sif
 *.tar
 
+# But keep images directory README
+!images/README.md
+
 # Experiments (track configs but not outputs)
 experiments/*/logs/
 experiments/*/checkpoints/
