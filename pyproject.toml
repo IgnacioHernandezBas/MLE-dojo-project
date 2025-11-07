@@ -80,7 +80,7 @@ extend-exclude = '''
   | \.venv
   | build
   | dist
-  | mle-dojo
+  | MLE-Dojo
 )/
 '''
 
@@ -88,7 +88,7 @@ extend-exclude = '''
 profile = "black"
 line_length = 88
 skip_gitignore = true
-extend_skip_glob = ["mle-dojo/*"]
+extend_skip_glob = ["MLE-Dojo/*"]
 
 [tool.mypy]
 python_version = "3.9"
@@ -97,7 +97,7 @@ warn_unused_configs = true
 disallow_untyped_defs = false
 ignore_missing_imports = true
 exclude = [
-    "mle-dojo/",
+    "MLE-Dojo/",
     "experiments/",
     "build/",
 ]
@@ -116,7 +116,7 @@ python_functions = "test_*"
 source = ["agent"]
 omit = [
     "*/tests/*",
-    "*/mle-dojo/*",
+    "*/MLE-Dojo/*",
     "*/__pycache__/*",
 ]
 
