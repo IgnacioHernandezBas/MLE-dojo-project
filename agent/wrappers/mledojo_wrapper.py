@@ -291,7 +291,8 @@ class MLEDojoWrapper:
                 print(f"Action status: {obs.get('action_status', 'UNKNOWN')}")
                 print(f"Step reward: {step_reward:.4f}")
                 print(f"Current score: {current_score:.4f}")
-                print(f"Best score: {obs.get('best_position_score', 0.0):.4f}")
+                best_score = obs.get('best_position_score', 0.0)
+                print(f"Best score: {best_score if best_score is not None else 0.0:.4f}")
 
         if verbose:
             print(f"\nEpisode completed: {step_count} steps")

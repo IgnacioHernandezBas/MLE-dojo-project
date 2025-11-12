@@ -6,7 +6,9 @@
 #SBATCH --gres=gpu:1
 #SBATCH --mem=32G
 #SBATCH --cpus-per-task=8
-#SBATCH --partition=gpu
+#SBATCH --account=cml-furongh
+#SBATCH --partition=cml-dpart
+#SBATCH --qos=cml-high
 
 # SLURM job script for running MLE-Dojo agent training
 # Usage: sbatch scripts/submit_slurm.sh [mode] [args...]
@@ -36,22 +38,27 @@ echo ""
 # module load python/3.10
 # module load apptainer
 
+# Activate conda environment
+echo "Activating conda environment: mle-dojo"
+source /fs/nexus-scratch/ihbas/miniconda3/etc/profile.d/conda.sh
+conda activate mle-dojo
+
+# Set PyTorch memory optimization
+export PYTORCH_ALLOC_CONF=expandable_segments:True
+
 # Print environment info
 echo "Environment:"
-nvidia-smi
+echo "Python: $(which python)"
 python --version
+echo "CUDA available:"
+nvidia-smi
+echo ""
+echo "Installed packages:"
+pip list | grep -E "(torch|transformers|accelerate|bitsandbytes)"
 echo ""
 
-# Set up container if available
-CONTAINER="images/mle-dojo.sif"
-if [ -f "$CONTAINER" ]; then
-    echo "Using container: $CONTAINER"
-    # Mount the entire project directory for easy access
-    RUNNER="apptainer exec --nv --bind $(pwd):/workspace --pwd /workspace $CONTAINER"
-else
-    echo "Running without container (using local environment)"
-    RUNNER=""
-fi
+# No container needed - using conda environment directly
+RUNNER=""
 
 # Create logs directory
 mkdir -p logs
