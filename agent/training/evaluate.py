@@ -82,7 +82,7 @@ def evaluate_agent(
 
     # Get competition configuration from config or use default
     competition_name = config.get("competition", {}).get("name", "home-data-for-ml-course")
-    mle_dojo_source = Path(__file__).parent.parent.parent / "mle-dojo-source"
+    mle_dojo_source = Path(__file__).parent.parent.parent / "MLE-Dojo"
     competition_data_dir = mle_dojo_source / "data" / "prepared" / competition_name / "data"
 
     if not competition_data_dir.exists():

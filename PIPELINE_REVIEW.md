@@ -613,10 +613,10 @@ tools = {
 5. `agent/training/evaluate.py` - Evaluation metrics
 
 ### MLE-Dojo Documentation:
-- Repository: `mle-dojo-source/`
-- Environment API: `mle-dojo-source/mledojo/gym/env.py`
-- Competitions: `mle-dojo-source/prepare/mle.json`
-- README: `mle-dojo-source/README.md`
+- Repository: `MLE-Dojo/`
+- Environment API: `MLE-Dojo/mledojo/gym/env.py`
+- Competitions: `MLE-Dojo/prepare/mle.json`
+- README: `MLE-Dojo/README.md`
 
 ---
 
