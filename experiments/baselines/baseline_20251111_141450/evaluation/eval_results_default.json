@@ -1,0 +1,73 @@
+{
+  "model_path": "Qwen/Qwen2.5-Coder-7B-Instruct",
+  "benchmark": "default",
+  "num_episodes": 10,
+  "episodes": [
+    {
+      "episode_id": 0,
+      "reward": 0.0,
+      "success": false,
+      "steps": 0
+    },
+    {
+      "episode_id": 1,
+      "reward": 0.0,
+      "success": false,
+      "steps": 0
+    },
+    {
+      "episode_id": 2,
+      "reward": 0.0,
+      "success": false,
+      "steps": 0
+    },
+    {
+      "episode_id": 3,
+      "reward": 0.0,
+      "success": false,
+      "steps": 0
+    },
+    {
+      "episode_id": 4,
+      "reward": 0.0,
+      "success": false,
+      "steps": 0
+    },
+    {
+      "episode_id": 5,
+      "reward": 0.0,
+      "success": false,
+      "steps": 0
+    },
+    {
+      "episode_id": 6,
+      "reward": 0.0,
+      "success": false,
+      "steps": 0
+    },
+    {
+      "episode_id": 7,
+      "reward": 0.0,
+      "success": false,
+      "steps": 0
+    },
+    {
+      "episode_id": 8,
+      "reward": 0.0,
+      "success": false,
+      "steps": 0
+    },
+    {
+      "episode_id": 9,
+      "reward": 0.0,
+      "success": false,
+      "steps": 0
+    }
+  ],
+  "metrics": {
+    "avg_reward": 0.0,
+    "success_rate": 0.0,
+    "total_episodes": 10,
+    "successful_episodes": 0
+  }
+}

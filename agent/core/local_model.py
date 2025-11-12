@@ -7,7 +7,7 @@ with support for models like Qwen2.5-Coder that can run locally.
 
 import torch
 from typing import Any, Dict, Optional
-from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
+from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline, BitsAndBytesConfig
 
 from agent.core.base_agent import BaseAgent
 from agent.core.prompts import PromptManager
@@ -60,19 +60,66 @@ class LocalModelAgent(BaseAgent):
             trust_remote_code=True
         )
 
-        self.model = AutoModelForCausalLM.from_pretrained(
-            self.model_name,
-            torch_dtype=torch.float16 if self.device == "cuda" else torch.float32,
-            device_map=self.device,
-            trust_remote_code=True
-        )
+        # Load model with device_map for optimal memory management (requires accelerate)
+        dtype = torch.float16 if self.device == "cuda" else torch.float32
+
+        # Check for quantization settings from config
+        performance_config = self.config.get("performance", {})
+        use_4bit = performance_config.get("use_4bit_quantization", False)
+        use_8bit = performance_config.get("use_8bit_quantization", False)
+
+        # Prepare quantization config if needed
+        quantization_config = None
+        if use_4bit:
+            print("Using 4-bit quantization")
+            quantization_config = BitsAndBytesConfig(
+                load_in_4bit=True,
+                bnb_4bit_compute_dtype=dtype,
+                bnb_4bit_use_double_quant=True,
+                bnb_4bit_quant_type="nf4"
+            )
+        elif use_8bit:
+            print("Using 8-bit quantization")
+            quantization_config = BitsAndBytesConfig(
+                load_in_8bit=True
+            )
+
+        # Use device_map="auto" for better performance with accelerate library
+        # Falls back to manual device placement if accelerate is not available
+        try:
+            model_kwargs = {
+                "device_map": "auto",
+                "trust_remote_code": True
+            }
+
+            # Add quantization config if specified
+            if quantization_config:
+                model_kwargs["quantization_config"] = quantization_config
+            else:
+                model_kwargs["torch_dtype"] = dtype
+
+            self.model = AutoModelForCausalLM.from_pretrained(
+                self.model_name,
+                **model_kwargs
+            )
+        except ValueError as e:
+            if "accelerate" in str(e):
+                print("Warning: accelerate not found, falling back to manual device placement")
+                self.model = AutoModelForCausalLM.from_pretrained(
+                    self.model_name,
+                    torch_dtype=dtype,
+                    trust_remote_code=True
+                )
+                self.model = self.model.to(self.device)
+            else:
+                raise
 
         # Create text generation pipeline
+        # Note: When using device_map="auto", don't specify device parameter
         self.pipe = pipeline(
             "text-generation",
             model=self.model,
-            tokenizer=self.tokenizer,
-            device=self.device
+            tokenizer=self.tokenizer
         )
 
         print(f"Model loaded successfully on {self.device}")
@@ -151,10 +198,10 @@ class LocalModelAgent(BaseAgent):
         self.tokenizer = AutoTokenizer.from_pretrained(path, trust_remote_code=True)
 
         # Recreate pipeline
+        # Note: When using device_map, don't specify device parameter
         self.pipe = pipeline(
             "text-generation",
             model=self.model,
-            tokenizer=self.tokenizer,
-            device=self.device
+            tokenizer=self.tokenizer
         )
         print("Checkpoint loaded successfully")

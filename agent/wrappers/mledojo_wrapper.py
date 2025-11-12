@@ -298,9 +298,16 @@ class MLEDojoWrapper:
             print(f"\nEpisode completed: {step_count} steps")
             print(f"Final score: {self.current_episode_reward:.4f}")
 
+        # Get final environment state for detailed metrics
+        final_obs = obs if obs else {}
+
         return {
             **self.get_stats(),
-            "feedback_history": feedback_history
+            "feedback_history": feedback_history,
+            "final_position_score": self.current_episode_reward,
+            "best_position_score": final_obs.get('best_position_score', 0.0),
+            "steps_taken": step_count,
+            "final_observation": final_obs
         }
 
     def _extract_code(self, response: str) -> str:

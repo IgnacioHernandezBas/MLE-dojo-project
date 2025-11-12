@@ -3,6 +3,8 @@
 # Deep Learning
 torch>=2.0.0
 transformers>=4.35.0
+accelerate>=1.0.0  # For efficient model loading and device management
+bitsandbytes>=0.41.0  # For model quantization (memory optimization)
 
 # Data processing
 numpy>=1.24.0

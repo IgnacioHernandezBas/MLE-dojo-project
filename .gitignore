@@ -96,3 +96,6 @@ containers/*.img
 # Temporary files
 *.tmp
 .cache/
+
+#Python packages
+python_packages

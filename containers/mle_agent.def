@@ -38,6 +38,8 @@ From: nvidia/cuda:12.1.0-cudnn8-devel-ubuntu22.04
     # Install Python dependencies
     pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
     pip3 install transformers>=4.35.0
+    pip3 install accelerate>=1.0.0
+    pip3 install bitsandbytes>=0.41.0
     pip3 install numpy pandas pyyaml
     pip3 install tqdm wandb tensorboard
     pip3 install pytest black flake8

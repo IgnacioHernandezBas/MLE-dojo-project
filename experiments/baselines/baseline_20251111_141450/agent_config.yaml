@@ -1,0 +1,49 @@
+# Agent Configuration
+# Configuration for the base agent and model
+
+agent:
+  # Model configuration
+  model_name: "Qwen/Qwen2.5-Coder-7B-Instruct"
+  device: "cuda"  # or "cpu"
+
+  # Generation parameters
+  max_new_tokens: 512
+  temperature: 0.7
+  top_p: 0.9
+  do_sample: true
+
+  # Context management
+  max_history_turns: 3
+  max_context_length: 2048
+
+# Wrapper configuration
+wrapper:
+  # Logging and tracking
+  log_episodes: true
+  save_trajectories: true
+  trajectory_dir: "experiments/trajectories"
+
+  # Episode management
+  max_steps_per_episode: 100
+  timeout_seconds: 3600  # 1 hour per episode
+
+# Prompt configuration
+prompts:
+  # Use custom prompt templates
+  use_custom_templates: false
+  custom_template_dir: null
+
+  # Prompt engineering settings
+  include_task_description: true
+  include_history: true
+  max_history_in_prompt: 3
+
+# Performance settings
+performance:
+  # Model optimization
+  use_flash_attention: true
+  use_4bit_quantization: false
+  use_8bit_quantization: true
+
+  # Batching (for future multi-task scenarios)
+  batch_size: 1

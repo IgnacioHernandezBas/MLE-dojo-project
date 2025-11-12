@@ -17,6 +17,11 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 from agent.core.local_model import LocalModelAgent
 from agent.wrappers.mledojo_wrapper import MLEDojoWrapper
 
+# Import MLE-Dojo components
+from mledojo.gym.env import KaggleEnvironment
+from mledojo.gym.competition import CompetitionRegistry, CompInfo
+from mledojo.competitions import get_metric
+
 
 def evaluate_agent(
     model_path: str,
@@ -72,9 +77,43 @@ def evaluate_agent(
         "metrics": {}
     }
 
-    # TODO: Initialize MLE-Dojo environment with benchmark
-    print("\nWARNING: MLE-Dojo environment initialization not yet implemented")
-    print("This is a template that needs to be completed once the environment is set up\n")
+    # Initialize MLE-Dojo environment
+    print("\nInitializing MLE-Dojo environment...")
+
+    # Get competition configuration from config or use default
+    competition_name = config.get("competition", {}).get("name", "home-data-for-ml-course")
+    mle_dojo_source = Path(__file__).parent.parent.parent / "mle-dojo-source"
+    competition_data_dir = mle_dojo_source / "data" / "prepared" / competition_name / "data"
+
+    if not competition_data_dir.exists():
+        raise FileNotFoundError(
+            f"Competition data not found at {competition_data_dir}\n"
+            f"Please prepare the competition first using:\n"
+            f"  cd {mle_dojo_source}\n"
+            f"  echo '{competition_name}' > prepare/comp.txt\n"
+            f"  PYTHONPATH='.' python prepare/mle.py --competitions-file prepare/comp.txt --data-dir data/prepared --logs-dir data/prepare_logs"
+        )
+
+    # Create competition registry
+    registry = CompetitionRegistry(
+        name=competition_name,
+        data_dir=str(competition_data_dir),
+        comp_info=CompInfo(
+            category="General",
+            level="beginner",
+            output_type="submission.csv",
+            higher_is_better=True
+        ),
+        metric_class=get_metric(competition_name)
+    )
+
+    # Get environment configuration
+    env_config = config.get("env", {})
+    max_steps = env_config.get("max_steps", 10)
+
+    print(f"Competition: {competition_name}")
+    print(f"Max steps per episode: {max_steps}")
+    print()
 
     # Run evaluation episodes
     total_reward = 0.0
@@ -86,33 +125,65 @@ def evaluate_agent(
             print(f"Evaluating Episode {episode + 1}/{num_episodes}")
             print(f"{'='*60}")
 
-        # TODO: Run episode in actual environment
-        # episode_result = wrapper.run_episode(env, verbose=verbose)
+        # Create fresh environment for each episode
+        episode_output_dir = Path(output_dir) / f"episode_{episode}"
+        env = KaggleEnvironment.make(
+            competition_name=competition_name,
+            output_dir=str(episode_output_dir),
+            competition_registry=registry,
+            render_mode="human" if verbose else None,
+            score_mode="position",
+            gpu_device=env_config.get("gpu_device", 0),
+            gpu_memory_limit=env_config.get("gpu_memory_limit", 32),
+            execution_timeout=env_config.get("execution_timeout", 600)
+        )
 
-        # Placeholder episode result
-        episode_result = {
+        # Run episode using wrapper
+        episode_result = wrapper.run_episode(env, max_steps=max_steps, verbose=verbose)
+
+        # Extract detailed results
+        final_position_score = episode_result.get("final_position_score", 0.0)
+        best_position_score = episode_result.get("best_position_score", 0.0)
+        steps_taken = episode_result.get("steps_taken", 0)
+
+        # Success is defined as achieving any positive position score
+        success = best_position_score > 0.0
+
+        episode_data = {
             "episode_id": episode,
-            "reward": 0.0,
-            "success": False,
-            "steps": 0
+            "final_position_score": float(final_position_score),
+            "best_position_score": float(best_position_score) if best_position_score is not None else 0.0,
+            "steps_taken": int(steps_taken),
+            "success": bool(success),
+            "feedback_history": episode_result.get("feedback_history", [])
         }
 
-        results["episodes"].append(episode_result)
+        results["episodes"].append(episode_data)
 
-        total_reward += episode_result["reward"]
-        if episode_result["success"]:
+        total_reward += best_position_score if best_position_score is not None else 0.0
+        if success:
             success_count += 1
 
         if verbose:
-            print(f"Episode {episode + 1} - Reward: {episode_result['reward']:.2f}, "
-                  f"Success: {episode_result['success']}")
+            print(f"Episode {episode + 1} - Best Position Score: {best_position_score:.4f}, "
+                  f"Steps: {steps_taken}, Success: {success}")
+
+        # Clean up environment
+        env.close()
 
     # Calculate aggregate metrics
+    all_best_scores = [ep.get("best_position_score", 0.0) for ep in results["episodes"]]
+    all_steps = [ep.get("steps_taken", 0) for ep in results["episodes"]]
+
     results["metrics"] = {
-        "avg_reward": total_reward / num_episodes,
+        "avg_best_position_score": total_reward / num_episodes,
+        "max_best_position_score": max(all_best_scores) if all_best_scores else 0.0,
+        "min_best_position_score": min(all_best_scores) if all_best_scores else 0.0,
         "success_rate": success_count / num_episodes,
         "total_episodes": num_episodes,
-        "successful_episodes": success_count
+        "successful_episodes": success_count,
+        "avg_steps_taken": sum(all_steps) / len(all_steps) if all_steps else 0,
+        "episodes_with_steps": sum(1 for s in all_steps if s > 0)
     }
 
     # Save results
@@ -123,8 +194,11 @@ def evaluate_agent(
     print("\n" + "="*60)
     print("Evaluation Complete!")
     print("="*60)
-    print(f"Average Reward: {results['metrics']['avg_reward']:.2f}")
+    print(f"Average Best Position Score: {results['metrics']['avg_best_position_score']:.4f}")
+    print(f"Max Position Score: {results['metrics']['max_best_position_score']:.4f}")
     print(f"Success Rate: {results['metrics']['success_rate']:.2%}")
+    print(f"Avg Steps Taken: {results['metrics']['avg_steps_taken']:.1f}")
+    print(f"Episodes with Actions: {results['metrics']['episodes_with_steps']}/{num_episodes}")
     print(f"Results saved to: {results_path}")
     print("="*60)
 

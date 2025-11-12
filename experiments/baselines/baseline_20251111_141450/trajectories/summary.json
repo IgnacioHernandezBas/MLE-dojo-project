@@ -1,0 +1,66 @@
+{
+  "num_episodes": 10,
+  "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+  "trajectories": [
+    {
+      "episode_id": 0,
+      "steps": [],
+      "total_reward": 0.0,
+      "success": false
+    },
+    {
+      "episode_id": 1,
+      "steps": [],
+      "total_reward": 0.0,
+      "success": false
+    },
+    {
+      "episode_id": 2,
+      "steps": [],
+      "total_reward": 0.0,
+      "success": false
+    },
+    {
+      "episode_id": 3,
+      "steps": [],
+      "total_reward": 0.0,
+      "success": false
+    },
+    {
+      "episode_id": 4,
+      "steps": [],
+      "total_reward": 0.0,
+      "success": false
+    },
+    {
+      "episode_id": 5,
+      "steps": [],
+      "total_reward": 0.0,
+      "success": false
+    },
+    {
+      "episode_id": 6,
+      "steps": [],
+      "total_reward": 0.0,
+      "success": false
+    },
+    {
+      "episode_id": 7,
+      "steps": [],
+      "total_reward": 0.0,
+      "success": false
+    },
+    {
+      "episode_id": 8,
+      "steps": [],
+      "total_reward": 0.0,
+      "success": false
+    },
+    {
+      "episode_id": 9,
+      "steps": [],
+      "total_reward": 0.0,
+      "success": false
+    }
+  ]
+}
