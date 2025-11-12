@@ -61,11 +61,11 @@ echo "Test configuration saved to $OUTPUT_DIR"
 echo ""
 
 # Check if competition data exists
-COMP_DATA="mle-dojo-source/data/prepared/home-data-for-ml-course/data"
+COMP_DATA="MLE-Dojo/data/prepared/home-data-for-ml-course/data"
 if [ ! -d "$COMP_DATA" ]; then
     echo "⚠️  WARNING: Competition data not found at $COMP_DATA"
     echo "Please prepare the competition first:"
-    echo "  cd mle-dojo-source"
+    echo "  cd MLE-Dojo"
     echo "  echo 'home-data-for-ml-course' > prepare/comp.txt"
     echo "  PYTHONPATH='.' python prepare/mle.py --competitions-file prepare/comp.txt --data-dir data/prepared --logs-dir data/prepare_logs"
     echo ""

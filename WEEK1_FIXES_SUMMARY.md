@@ -179,7 +179,7 @@ Full evaluation:
 cd /fs/nexus-scratch/ihbas/MLE-dojo-project
 
 # Make sure competition data is prepared
-ls mle-dojo-source/data/prepared/home-data-for-ml-course/data/
+ls MLE-Dojo/data/prepared/home-data-for-ml-course/data/
 
 # Run single episode evaluation
 python agent/training/evaluate.py \

@@ -8,7 +8,7 @@ echo ""
 
 # Check 1: Competition data
 echo "✓ Checking competition data..."
-COMP_DATA="mle-dojo-source/data/prepared/home-data-for-ml-course/data"
+COMP_DATA="MLE-Dojo/data/prepared/home-data-for-ml-course/data"
 if [ -d "$COMP_DATA/public" ] && [ -f "$COMP_DATA/public/train.csv" ]; then
     echo "  ✓ Competition data found"
     echo "    - train.csv: $(wc -l < $COMP_DATA/public/train.csv) lines"

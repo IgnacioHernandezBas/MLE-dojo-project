@@ -308,7 +308,7 @@ for ep in results['episodes']:
 
 ## References
 
-- MLE-Dojo Environment: `mle-dojo-source/mledojo/gym/env.py`
+- MLE-Dojo Environment: `MLE-Dojo/mledojo/gym/env.py`
 - Scoring Logic: Lines 366-390 (submission evaluation)
 - Evaluation Script: `agent/training/evaluate.py`
 - Wrapper: `agent/wrappers/mledojo_wrapper.py`
