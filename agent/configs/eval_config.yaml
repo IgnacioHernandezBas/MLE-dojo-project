@@ -22,6 +22,24 @@ evaluation:
     #   difficulty: "hard"
     #   tasks: null
 
+# MLE-Dojo Competition Configuration
+competition:
+  name: "home-data-for-ml-course"  # Small competition for testing
+
+# MLE-Dojo Environment Configuration
+env:
+  max_steps: 20  # Increased from 5 to allow iterative development
+  render_mode: "human"
+  score_mode: "position"
+  gpu_device: 0
+  gpu_memory_limit: 32
+  execution_timeout: 600  # 10 minutes per code execution
+
+# Wrapper configuration
+wrapper:
+  log_episodes: true
+  save_trajectories: true
+
 # Agent configuration for evaluation
 agent:
   # Model settings
@@ -29,13 +47,20 @@ agent:
   device: "cuda"
 
   # Generation parameters (can be different from training)
-  max_new_tokens: 512
+  max_new_tokens: 2048  # Increased from 1024 for longer code generation
   temperature: 0.3  # Lower temperature for evaluation
   top_p: 0.9
   do_sample: true
 
   # Context management
-  max_history_turns: 5
+  max_history_turns: 10  # Increased from 5 to keep debugging context
+  max_context_length: 8192  # Increased from 2048 for richer context
+
+  # Performance settings
+  performance:
+    use_flash_attention: true
+    use_4bit_quantization: false
+    use_8bit_quantization: true
 
 # Metrics to compute
 metrics:

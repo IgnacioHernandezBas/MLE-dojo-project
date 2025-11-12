@@ -7,14 +7,14 @@ agent:
   device: "cuda"  # or "cpu"
 
   # Generation parameters
-  max_new_tokens: 512
+  max_new_tokens: 2048  # Increased from 512 for longer code generation
   temperature: 0.7
   top_p: 0.9
   do_sample: true
 
   # Context management
-  max_history_turns: 5
-  max_context_length: 4096
+  max_history_turns: 10  # Increased from 3 to keep debugging context
+  max_context_length: 8192  # Increased from 2048 for richer context
 
 # Wrapper configuration
 wrapper:
@@ -43,7 +43,7 @@ performance:
   # Model optimization
   use_flash_attention: true
   use_4bit_quantization: false
-  use_8bit_quantization: false
+  use_8bit_quantization: true
 
   # Batching (for future multi-task scenarios)
   batch_size: 1

@@ -17,45 +17,83 @@ class PromptManager:
     """
 
     # System prompt that defines the agent's role
-    SYSTEM_PROMPT = """You are an expert machine learning engineer working on implementing solutions to ML tasks.
-You have access to a Python environment where you can write and execute code.
+    SYSTEM_PROMPT = """You are an expert machine learning engineer competing in Kaggle-style ML competitions.
+You are working in the MLE-Dojo environment where you can iteratively develop ML solutions.
 
-Your goal is to:
-1. Understand the task requirements
-2. Plan your implementation approach
-3. Write clean, efficient code
-4. Test your solution
-5. Debug and improve as needed
+## Environment Actions Available:
+1. **request_info** - Request information about the competition
+   - info_type="overview": Get competition description and goals
+   - info_type="data_structure": Get data file structure and columns
+   - info_type="metric": Get evaluation metric details
 
-Always think step-by-step and explain your reasoning. When you write code, ensure it's well-structured and follows best practices."""
+2. **execute_code** - Execute Python code in the environment
+   - Write code to explore data, train models, generate predictions
+   - Code runs in a sandboxed Python environment with ML libraries available
+   - Always save predictions to 'submission.csv' in the correct format
+
+## Your Workflow Should Follow:
+1. **Understand** - Request overview and data structure
+2. **Explore** - Write code to load and analyze the data
+3. **Develop** - Iteratively build and improve your solution:
+   - Start with simple baseline models
+   - Experiment with feature engineering
+   - Try different algorithms
+   - Tune hyperparameters
+4. **Submit** - Generate final predictions in the required format
+
+## Code Response Format:
+When you want to execute code, wrap it in markdown code blocks:
+
+```python
+# Your code here
+import pandas as pd
+# ... rest of code
+```
+
+## Important Guidelines:
+- Start simple, then iterate and improve
+- Always handle errors gracefully
+- Read feedback from previous actions carefully
+- The environment gives you feedback after each action
+- Your score improves when predictions are better
+- Think step-by-step and explain your reasoning before coding"""
 
     # Template for the main task prompt
     TASK_TEMPLATE = """
-## Task Description
+## Competition Details
 {task_description}
 
-## Current Observation
+## Current Feedback from Environment
 {observation}
 
-## Instructions
-Based on the observation above, provide your next action. You can:
-- Write Python code to solve the problem
-- Run commands to test or debug
-- Ask for clarification if needed
+## Your Next Action
+Based on the feedback above, decide your next step:
 
-Respond with your action and reasoning.
+1. If you need more information: Explain what you need to know
+2. If you're ready to code: Provide your reasoning, then write the code in a ```python``` block
+
+Think step-by-step:
+- What did the last action accomplish?
+- What information do I have now?
+- What should I do next to improve my solution?
 """
 
     # Template with conversation history
     HISTORY_TEMPLATE = """
-## Previous Actions
+## Previous Actions and Feedback
 {history}
 
-## Current Observation
+## Latest Feedback from Environment
 {observation}
 
-## Next Action
-Based on the previous actions and current observation, what should you do next?
+## Analysis and Next Action
+Review what you've tried so far. Then:
+
+1. **Analyze**: What worked? What didn't? What did you learn?
+2. **Decide**: What's the logical next step to improve your solution?
+3. **Act**: Write code in a ```python``` block OR explain what information you need
+
+Remember: Iterate and improve! Each action should build on previous learning.
 """
 
     def __init__(self, custom_templates: Optional[Dict[str, str]] = None):
@@ -111,7 +149,7 @@ Based on the previous actions and current observation, what should you do next?
 
         return "\n".join(parts)
 
-    def _format_history(self, history: List[Dict[str, str]], max_turns: int = 5) -> str:
+    def _format_history(self, history: List[Dict[str, str]], max_turns: int = 10) -> str:
         """
         Format conversation history into a readable string.
 
